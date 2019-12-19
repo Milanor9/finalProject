@@ -12,7 +12,6 @@
 
 library(shiny)
 library(dplyr)
-library(DT)
 library(ggplot2)
 library(leaflet)
 
@@ -324,8 +323,7 @@ server <- function(input, output, session) {
                         summarise(cnt = n()) %>%
                         ggplot(aes(x = (ORIGIN_AIRPORT), y = cnt)) +
                         geom_bar(stat = "identity") +
-                        theme(axis.text.x=element_text(angle = -90, hjust = 0))+
-                        flip_coord()
+                        theme(axis.text.x=element_text(angle = -90, hjust = 0))
                 }
                 else if(y() == "Average flight duration"){
                     flights %>%

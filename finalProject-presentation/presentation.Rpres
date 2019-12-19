@@ -4,8 +4,8 @@ author: Charles Murier & John NGO
 date: 17-12-2019
 autosize: true
 
-Shiny app : https://charlesmurier.shinyapps.io/shiny-r/ <br/>
-R presentation : http://rpubs.com/charlesmurier/finalProject <br/>
+Shiny app : https://charlesmurier.shinyapps.io/finalProject <br/>
+R presentation : http://rpubs.com/charlesmurier/finalProject-presentation <br/>
 Repo Github : https://github.com/Milanor9/finalProject
 
 

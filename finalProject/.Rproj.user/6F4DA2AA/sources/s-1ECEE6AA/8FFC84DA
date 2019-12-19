@@ -1,0 +1,25 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1576746458901.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "8FFC84DA",
+    "lastKnownWriteTime" : 1576746629,
+    "last_content_update" : 1576746629233,
+    "path" : "~/finalProject-presentation/presentation.Rpres",
+    "project_path" : "../finalProject-presentation/presentation.Rpres",
+    "properties" : {
+        "cursorPosition" : "23,0",
+        "scrollLine" : "0"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_presentation"
+}
