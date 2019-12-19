@@ -1,0 +1,12 @@
+name: shiny-r
+title: shiny-r
+username:
+account: charlesmurier
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 1600117
+bundleId: 2671841
+url: https://charlesmurier.shinyapps.io/shiny-r/
+when: 1576505500.7299
+asMultiple: FALSE
+asStatic: FALSE

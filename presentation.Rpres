@@ -1,0 +1,220 @@
+Final project presentation
+========================================================
+author: Charles Murier & John NGO
+date: 17-12-2019
+autosize: true
+
+Shiny app : https://charlesmurier.shinyapps.io/shiny-r/ <br/>
+R presentation : http://rpubs.com/charlesmurier/finalProject <br/>
+Repo Github : https://github.com/Milanor9/finalProject
+
+
+
+The side panel for trains
+========================================================
+
+```{r echo=FALSE}
+knitr::include_graphics('train-ui.jpg')
+```
+<font size="5"> 
+
+- We can choose the value aggregated between year and station
+- If the value aggregated is year we can choose to see for only one station or for all stations
+- Then we can choose the Y variable so we can see the graphic that we want
+
+</font> 
+
+Examples of plots by year for all the stations
+========================================================
+
+```{r echo=FALSE}
+library(dplyr)
+library(ggplot2)
+library("gridExtra")
+library(grid)
+
+
+trains <- read.csv("full_trains.csv", sep = ",")
+flights <- read.csv("flights.csv", sep=",", nrows=10000)
+
+trains$num_of_trains_carried_out <- with(trains, total_num_trips-num_of_canceled_trains)
+```
+
+
+```{r  out.width="100%",fig.height=3, echo=FALSE}
+a<-trains %>% 
+  group_by(year) %>% 
+  mutate(num_of_trains_carried_out = (sum(num_of_trains_carried_out, na.rm = T))) %>%
+  ggplot(aes(x=year, y=num_of_trains_carried_out))+ geom_point(aes(group=year))+stat_summary(geom = "line")
+
+b<-trains %>% 
+  group_by(year) %>% 
+  mutate(avg_delay_departure_of_all_trains = sum(avg_delay_all_departing * num_of_trains_carried_out , na.rm = T)/sum(num_of_trains_carried_out, na.rm = T)) %>% 
+  ggplot(aes(x=year, y=avg_delay_departure_of_all_trains))+
+  geom_point(aes(group=year))+stat_summary(geom = "line")
+                
+
+c<-trains %>% 
+  group_by(year) %>%
+  mutate(percentage_of_canceled_trains = (sum(num_of_canceled_trains, na.rm = T)/sum(total_num_trips, na.rm = T))*100) %>%
+  ggplot(aes(x=year, y=percentage_of_canceled_trains))+
+  geom_point(aes(group=year))+stat_summary(geom = "line")
+
+grid.arrange(a,b,c, nrow=1)
+
+
+```
+<font size="5"> 
+- We choose to plot a line when the graphic is shown by year because it's easier to see the evolution
+</font>
+
+Examples of plots by year for Paris Est station
+========================================================
+
+```{r out.width="100%",fig.height=4, echo=FALSE}
+
+train <- trains[trains[, "departure_station"] == "PARIS EST",]
+
+
+a<-train %>% 
+  group_by(year) %>% 
+  mutate(num_of_trains_carried_out = (sum(num_of_trains_carried_out, na.rm = T))) %>%
+  ggplot(aes(x=year, y=num_of_trains_carried_out))+ geom_point(aes(group=year))+stat_summary(geom = "line")
+
+b<-train %>% 
+  group_by(year) %>% 
+  mutate(avg_delay_departure_of_all_trains = sum(avg_delay_all_departing * num_of_trains_carried_out , na.rm = T)/sum(num_of_trains_carried_out, na.rm = T)) %>% 
+  ggplot(aes(x=year, y=avg_delay_departure_of_all_trains))+
+  geom_point(aes(group=year))+stat_summary(geom = "line")
+                
+
+c<-train %>% 
+  group_by(year) %>%
+  mutate(percentage_of_canceled_trains = (sum(num_of_canceled_trains, na.rm = T)/sum(total_num_trips, na.rm = T))*100) %>%
+  ggplot(aes(x=year, y=percentage_of_canceled_trains))+
+  geom_point(aes(group=year))+stat_summary(geom = "line")
+
+grid.arrange(a,b,c, nrow=1)
+
+```
+
+Example : number of trains late at departure by departure station 
+========================================================
+```{r out.width="100%", echo=FALSE}
+trains %>% 
+  group_by(departure_station) %>% 
+  mutate(num_late_at_departure = (sum(num_late_at_departure, na.rm = T))) %>% 
+  ggplot(aes(x=departure_station, y=num_late_at_departure))+
+  geom_bar(stat = "identity") +theme(axis.text.x=element_text(angle = -90, hjust = 0))
+```
+
+
+
+The side panel for flights
+========================================================
+
+```{r out.width="50%", echo=FALSE}
+knitr::include_graphics('ui.jpg')
+
+```
+<font size="5"> 
+
+- We can choose the value aggregated between airline and origin airport
+- If the value aggregated is airline we can choose to see for only one airport or for all airports
+- Then we can choose the Y variable so we can see the graphic that we want
+- If we click on map, the map representing the airports is displayed
+
+</font> 
+
+
+Example: Average time in the air by airlines for all the airports
+========================================================
+
+```{r out.width="100%",fig.height=3, echo=FALSE}
+flights %>%
+  group_by(AIRLINE) %>%
+  summarize(average_air_time = mean(AIR_TIME, na.rm=TRUE)) %>%
+  ggplot(aes(x = (AIRLINE), y = average_air_time)) +
+  geom_bar(stat = "identity") +
+  theme(axis.text.x=element_text(angle = -90, hjust = 0))
+
+```
+<font size="5"> 
+
+- This time we chose barplot because there is no evolution, it's only a comparison between the airlines
+
+</font> 
+
+Example: Average time in the air by airlines for LAS VEGAS airport
+========================================================
+
+```{r  out.width="100%",fig.height=4, echo=FALSE}
+
+
+flight<- flights[flights[, "ORIGIN_AIRPORT"] == "LAS",]
+
+
+flight %>%
+  group_by(AIRLINE) %>%
+  summarize(average_air_time = mean(AIR_TIME, na.rm=TRUE)) %>%
+  ggplot(aes(x = (AIRLINE), y = average_air_time)) +
+  geom_bar(stat = "identity") +
+  theme(axis.text.x=element_text(angle = -90, hjust = 0))
+
+```
+
+Example: Total distance of flights by airport
+========================================================
+
+```{r  out.width="100%",fig.height=4, echo=FALSE}
+flights %>%
+  group_by(ORIGIN_AIRPORT) %>%
+  summarize(total_distance = mean(DISTANCE, na.rm=TRUE)) %>%
+  ggplot(aes(x = (ORIGIN_AIRPORT), y = total_distance)) +
+  geom_bar(stat = "identity") +
+  theme(axis.text.x=element_text(angle = -90, hjust = 0))
+
+```
+
+How the map is displayed
+========================================================
+
+```{r echo=FALSE}
+knitr::include_graphics('all_airport.JPG')
+```
+- When "all airports" is selected, the positions of all the airports are visible on the map
+
+```{r echo=FALSE}
+knitr::include_graphics('las-airport.jpg')
+```
+- When one specific airport is selected, the position of this specific airport is visible on the map
+
+
+The map displayed when a specific airport is selected (1/2)
+========================================================
+
+```{r echo=FALSE}
+knitr::include_graphics('las-airport.jpg')
+
+knitr::include_graphics('las.jpg')
+
+```
+
+The map displayed when a specific airport is selected (2/2)
+========================================================
+
+```{r echo=FALSE}
+
+knitr::include_graphics('las2.jpg')
+
+```
+
+The map displayed when all airports are selected
+========================================================
+
+```{r echo=FALSE}
+knitr::include_graphics('all_airport.JPG')
+
+knitr::include_graphics('capture.jpg')
+```
+
